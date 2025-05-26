@@ -1,6 +1,5 @@
 import writeTag from "./WriteTag/WriteTag";
 import './WriteTagComponent.css';
-import { disableButtons } from "../ButtonActions/DisableButtons";
 import { useState } from "react";
 
 export function WriteTagComponent() {
@@ -25,8 +24,7 @@ export function WriteTagComponent() {
     console.log("🧪 Submit clicked", formData);
 
     try {
-      await writeTag(formData);     // Wywołanie funkcji NFC + zapis do bazy
-      disableButtons();             // Wyłączenie przycisków po sukcesie
+      await writeTag(formData);     // Wywołanie funkcji NFC + zapis do bazy        // Wyłączenie przycisków po sukcesie
     } catch (error) {
       console.error("❌ Write to NFC failed:", error);
     }
