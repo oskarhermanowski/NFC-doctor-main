@@ -8,7 +8,8 @@ import { getDateAndTime } from "../../Date/GetDateAndTime";
 export default async function writeTag(formData, retries = 2) {
   
     const timeStamp = getDateAndTime();
-    const response = await axios.post("/nfcs", {
-      ...formData
-    });
+    const response = await axios.post("/api/nfcs", {
+  ...formData,
+  timeStamp: getDateAndTime(),
+});
 }
