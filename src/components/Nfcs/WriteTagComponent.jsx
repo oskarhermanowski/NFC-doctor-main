@@ -3,7 +3,7 @@ import './WriteTagComponent.css';
 import { disableButtons } from "../ButtonActions/DisableButtons";
 import { useState } from "react";
 
-export function WriteTagComponent({ QrScanResult }) {
+export function WriteTagComponent() {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -20,10 +20,15 @@ export function WriteTagComponent({ QrScanResult }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    writeTag(formData);
-    disableButtons();
+    try {
+      await writeTag(formData);     // ✅ CZEKAJ na zapis
+      disableButtons();             // ✅ Wyłącz przyciski dopiero po sukcesie
+    } catch (error) {
+      console.error("❌ Write to NFC failed:", error);
+      // Możesz też pokazać komunikat błędu użytkownikowi
+    }
   };
 
   return (
