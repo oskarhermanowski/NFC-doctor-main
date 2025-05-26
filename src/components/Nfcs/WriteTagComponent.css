@@ -1,0 +1,99 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+  }
+
+  .row-btn-write {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    text-indent: 0.2rem;
+    margin-top: 0.1rem;
+    transition: all 0.3s ease-out;
+  }
+
+  .log-write-div {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin-top: 0.1rem;
+    gap: 0rem;
+  }
+
+  .btn-write {
+    background: hsla(0, 0%, 90%, 0.7);
+    border: 1px solid hsla(0, 0%, 100%, 0.8);
+    color: hsla(0, 0%, 0%, 1);
+    padding: 0.5em 0.75em 0.5em 0.75em;
+    border-radius: 1.5em;
+    cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    font-family: "Ubuntu", Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-left: 2.7rem;
+    margin-right: 2.4rem;
+    margin-top: 1rem;
+  }
+  
+  .btn-write:hover,
+  .btn-write:focus-visible {
+    background: hsla(0, 0%, 90%, 0.85);
+  }
+
+  .btn-write:active {
+    background: hsla(0, 0%, 90%, 0.95);
+  }
+
+  .btn-write:disabled{
+    background: hsla(0, 0%, 90%, 0.15);
+    border: 1px solid hsl(0, 0%, 65%);
+    color: hsl(0, 0%, 70%);
+    cursor: not-allowed;
+  }
+
+  .log-write {
+    overflow-wrap: break-word;
+    max-width: 400px;
+    white-space: pre-wrap;
+    color: white;
+    margin-bottom: 0rem;
+    text-indent: 0;
+    font-family: "Ubuntu", Arial, Helvetica, sans-serif;
+    font-weight: bold;
+  }
+
+  .log-write-test {
+    overflow-wrap: break-word;
+    max-width: 400px;
+    white-space: pre-wrap;
+    color: white;
+    margin-bottom: -0.6rem;
+    text-indent: 0;
+    font-family: "Ubuntu", Arial, Helvetica, sans-serif;
+    font-weight: bold;
+  }
+
+  @media screen and (min-width: 700px) {
+    .row-btn-write {
+      gap: 2rem;
+    }
+
+    .btn-write {
+      padding: 0.5em 0.75em 0.5em 0.75em;
+      margin-left: 11.6rem;
+      margin-right: 11.6rem;
+      font-size: large;
+    }
+
+    .log-write {
+      max-width: 700px;
+      font-size: large;
+    }
+
+    .log-write-test {
+      max-width: 700px;
+      font-size: large;
+    }
+  }
