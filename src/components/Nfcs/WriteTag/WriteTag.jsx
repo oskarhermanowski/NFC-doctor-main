@@ -9,7 +9,6 @@ export default async function writeTag(formData, retries = 2) {
   
     const timeStamp = getDateAndTime();
     const response = await axios.post("/nfcs", {
-      ...formData,
-      timeStamp: timeStamp,
+      ...formData
     });
 }
