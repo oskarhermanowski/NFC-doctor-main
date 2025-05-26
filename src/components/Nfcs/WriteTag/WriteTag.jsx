@@ -1,131 +1,53 @@
-import { enableButtons } from "../../ButtonActions/EnableButtons";
+import axios from "../../../axios";
 import { logWriteTag } from "./LogWriteTag";
 import { logWriteTagInfo } from "./LogWriteTagInfo";
 import { sleep } from "./Sleep";
-import axios from "../../../axios";
+import { enableButtons } from "../../ButtonActions/EnableButtons";
 import { getDateAndTime } from "../../Date/GetDateAndTime";
-import { generateNewIndex } from "../../Index/GenerateNewIndex";
 
-export default async function writeTag(message, batchNumber, times = 2) {
-  var checkBoxBatch = document.getElementById("batchCheck");
-  var checkBoxIndex = document.getElementById("indexCheck");
-  if ("NDEFReader" in window) {
-    if (times == 2) {
-      logWriteTag("");
-    }
-    const ndef = new NDEFReader();
-    if (message === undefined) {
-      logWriteTagInfo("Oops!");
-      logWriteTag("Scan the QR code first.");
-    }
-    else{
-      try {
-        var dateTime = getDateAndTime();
-        if (checkBoxIndex.checked == true) {
-          var index = generateNewIndex();
-          if (checkBoxBatch.checked == true){
-            while (checkBoxBatch.checked == true){
-              logWriteTagInfo("Bring the tag near the reader.  Step[1/4]");
-              await ndef.write("isAccess");
-              if (checkBoxBatch.checked == true) {
-                logWriteTagInfo("Writing tag... Step[2/4]");
-                dateTime = getDateAndTime();
-                index = generateNewIndex();
-                var res = await axios.post('/nfcs', {
-                  info: message,
-                  timeStamp: dateTime,
-                  index: index,
-                  batchNumber: batchNumber,
-                })
-                var id = res.data._id.toString();
-                logWriteTagInfo("Writing tag... Step[3/4]");
-                await ndef.write(id);
-                await ndef.makeReadOnly();
-                logWriteTagInfo("Success!");
-                logWriteTag("Written information:\n" + message +  "\n" + "Index: " + index + "\n" + "Batch number: " + batchNumber + "\n" + "Written at: " + dateTime);
-                await sleep(1000);
-              }
-              else {
-                logWriteTagInfo("");
-                logWriteTag("");
-              }
-            }
-          }
-          else {
-            var res = await axios.post('/nfcs', {
-              info: message,
-              timeStamp: dateTime,
-              index: index,
-            })
-            var id = res.data._id.toString();
-            logWriteTagInfo("Bring the tag near the reader.  Step[1/2]");
-            await ndef.write(id);
-            await ndef.makeReadOnly();
-            logWriteTagInfo("Success!");
-            logWriteTag("Written information:\n" + message  + "\n" + "Index: " + index + "\n" + "Written at: " + dateTime);
-          }
-        }
-        else {
-          if (checkBoxBatch.checked == true){
-            while (checkBoxBatch.checked == true) {
-              logWriteTagInfo("Bring the tag near the reader.  Step[1/4]");
-              await ndef.write("isAccess");
-              if (checkBoxBatch.checked == true) {
-                logWriteTagInfo("Writing tag... Step[2/4]");
-                dateTime = getDateAndTime();
-                index = generateNewIndex();
-                var res = await axios.post('/nfcs', {
-                  info: message,
-                  timeStamp: dateTime,
-                  batchNumber: batchNumber,
-                })
-                var id = res.data._id.toString();
-                logWriteTagInfo("Writing tag... Step[3/4]");
-                await ndef.write(id);
-                await ndef.makeReadOnly();
-                logWriteTagInfo("Success!");
-                logWriteTag("Written information:\n" + message + "\n" + "Batch number: " + batchNumber + "\n" + "Written at: " + dateTime);
-                await sleep(1000);
-              }
-              else {
-                logWriteTagInfo("");
-                logWriteTag("");
-              }
-            }
-          }
-          else {
-            var res = await axios.post('/nfcs', {
-              info: message,
-              timeStamp: dateTime,
-            })
-            var id = res.data._id.toString();
-            logWriteTagInfo("Bring the tag near the reader.  Step[1/2]");
-            await ndef.write(id);
-            await ndef.makeReadOnly();
-            logWriteTagInfo("Success!");
-            logWriteTag("Written information:\n" + message + "\n" + "Written at: " + dateTime);
-          }
-        }
-      } catch(error) {
-        if (times > 0 && error.name != 'AbortError') {
-          if (times == 2) {
-            logWriteTag("A tag writing issue occurred! \nTry " + times + " more times.");
-          }
-          else {
-            logWriteTag("A tag writing issue occurred. \nTry " + times + " more time.");
-          }
-          return await writeTag(message, batchNumber, times - 1);
-        }
-        if (times == 0 && error.name != 'AbortError') {
-          logWriteTagInfo("Oops!");
-          logWriteTag("Can't write this tag!");
-          enableButtons();
-        }
-      }
-    }
-  } 
-  else {
+export default async function writeTag(formData, retries = 2) {
+  if (!("NDEFReader" in window)) {
     logWriteTagInfo("Oops!");
     logWriteTag("WebNFC API isn't supported in this browser.");
+    return;
+  }
+
+  if (!formData) {
+    logWriteTagInfo("Oops!");
+    logWriteTag("No data to write.");
+    return;
+  }
+
+  const ndef = new NDEFReader();
+
+  try {
+    logWriteTag("");
+    logWriteTagInfo("Sending data to the server...");
+
+    const timeStamp = getDateAndTime();
+    const response = await axios.post("/nfcs", {
+      ...formData,
+      timeStamp: timeStamp,
+    });
+
+    const id = response.data._id?.toString();
+    if (!id) {
+      throw new Error("No ID returned from server.");
+    }
+
+    logWriteTagInfo("Bring the tag near the reader...");
+    await ndef.write(id);
+    logWriteTagInfo("Success!");
+    logWriteTag(`Written tag ID: ${id}\nAt: ${timeStamp}`);
+  } catch (error) {
+    if (retries > 0 && error.name !== "AbortError") {
+      logWriteTag(`Writing failed. Retrying ${retries} more time(s)...`);
+      await sleep(1000);
+      return await writeTag(formData, retries - 1);
+    }
+
+    logWriteTagInfo("Oops!");
+    logWriteTag("Can't write this tag.");
+    enableButtons();
   }
 }

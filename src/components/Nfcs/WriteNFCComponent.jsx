@@ -1,11 +1,10 @@
-import "./QrScannerComponent.css"
-import { WriteTagComponent } from "../Nfcs/WriteTagComponent";
+import "./WriteNFCComponent.css"
+import { WriteTagComponent } from "./WriteTagComponent";
 
 export function QrScannerComponent( { QrScanResult } ) {
     return (
         <div className="row-scanner">
-            <label className="labl">READ QR CODE</label>
-            <div className="reader" id="readerQR"></div>
+            <label className="labl">WRITE NFC</label>
             <pre className="log-scanner" id="logQrScanRes"></pre>
             <WriteTagComponent QrScanResult={QrScanResult} />
         </div>

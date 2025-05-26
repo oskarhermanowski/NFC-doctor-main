@@ -2,16 +2,12 @@ import "./styles.css";
 import { useEffect, useState } from "react";
 import { ReadTagComponent } from "./components/Nfcs/ReadTagComponent";
 import NavComponent from "./components/Nav/NavComponent";
-import { QrListComponent } from "./components/Qrs/QrListComponent";
-import { renderQrScanner } from "./components/Qrs/RenderQrScanner/RenderQrScanner";
-import { QrScannerComponent } from "./components/Qrs/QrScannerComponent";
-import { newBatchNumber } from "./components/BatchNumber/NewBatchNumber";
+import { QrScannerComponent } from "./components/Nfcs/WriteNFCComponent";
 
 
 export default function App(){
 
   const [QrScanResult, setQrScanResult] = useState(undefined)
-  const [batchNumber, setBatchNumber] = useState(newBatchNumber())
   const [QRs, setQRs] = useState(() => {
     const localValue = localStorage.getItem("QRs")
     if (localValue == null) return []
@@ -21,10 +17,6 @@ export default function App(){
   useEffect(() =>{
     localStorage.setItem("QRs", JSON.stringify(QRs))
   }, [QRs]);
-  
-  useEffect(() => {
-    renderQrScanner(setQRs, setQrScanResult)
-  }, []);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -37,7 +29,6 @@ export default function App(){
       <ReadTagComponent />   
       <QrScannerComponent QrScanResult={QrScanResult} />
     </form>
-    <QrListComponent qrs={QRs} setQrs={setQRs} setBatchNumber={setBatchNumber} batchNumber={batchNumber} />
   </>
   );
 }
