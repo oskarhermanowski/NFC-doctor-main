@@ -22,12 +22,13 @@ export function WriteTagComponent() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("🧪 Submit clicked", formData);
+
     try {
-      await writeTag(formData);     // ✅ CZEKAJ na zapis
-      disableButtons();             // ✅ Wyłącz przyciski dopiero po sukcesie
+      await writeTag(formData);     // Wywołanie funkcji NFC + zapis do bazy
+      disableButtons();             // Wyłączenie przycisków po sukcesie
     } catch (error) {
       console.error("❌ Write to NFC failed:", error);
-      // Możesz też pokazać komunikat błędu użytkownikowi
     }
   };
 
@@ -49,7 +50,7 @@ export function WriteTagComponent() {
         ))}
         <div className="btn-center">
           <button type="submit" className="btn-write" id="btn-write">
-            Write to NFC
+            Write to NFC!!!
           </button>
         </div>
       </form>
