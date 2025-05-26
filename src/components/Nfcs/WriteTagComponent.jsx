@@ -53,6 +53,9 @@ export function WriteTagComponent() {
         </div>
       </form>
       <div className="log-write-div">
+        <button onClick={(e) => {writeTag()}} className="btn-write" id="btn-write">
+            Write to NFC???
+          </button>
         <pre className="log-write-test" id="logWriteTagTest"></pre>
         <pre className="log-write" id="logWriteTag"></pre>
       </div>
