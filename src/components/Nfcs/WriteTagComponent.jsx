@@ -43,7 +43,7 @@ export function WriteTagComponent() {
 
       <div className="btn-center">
         <button onClick={handleWriteClick} className="btn-write" id="btn-write">
-          Write to NFC!!!
+          Write to NFC
         </button>
       </div>
 
