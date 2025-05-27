@@ -1,3 +1,4 @@
+/* Ogólny układ formularza */
 .nfc-form {
   display: flex;
   flex-direction: column;
@@ -5,11 +6,13 @@
   padding: 1rem;
 }
 
+/* Rząd: label + input */
 .form-row {
   display: flex;
   flex-direction: column;
 }
 
+/* Label nad inputem */
 label {
   font-weight: bold;
   margin-bottom: 0.25rem;
@@ -17,6 +20,7 @@ label {
   font-size: 0.95rem;
 }
 
+/* Input – pełna szerokość */
 input {
   padding: 0.5rem;
   border-radius: 0.5rem;
@@ -25,8 +29,35 @@ input {
   width: 100%;
   max-width: 100%;
   background: #f1f1f1;
+  color: black;
 }
 
+/* Wyśrodkowanie przycisku */
+.btn-center {
+  text-align: center;
+}
+
+/* Sam przycisk – styl i zaokrąglenie */
+.btn-write {
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: 2rem;
+  background-color: #f5d0fe;
+  color: black;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: background 0.2s ease;
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+.btn-write:hover {
+  background-color: #e0bfee;
+}
+
+/* Responsywność na desktopie */
 @media screen and (min-width: 700px) {
   .form-row {
     flex-direction: row;
@@ -36,7 +67,7 @@ input {
 
   label {
     width: 35%;
-    margin: 0;
+    margin-bottom: 0;
     text-align: right;
     padding-right: 1rem;
   }
